@@ -47,5 +47,4 @@ jobs:
             -project Parchley.xcodeproj \
             -scheme Parchley \
             -destination 'platform=macOS,arch=arm64' \
-            -only-testing:ParchleyTests \
             CODE_SIGNING_ALLOWED=NO

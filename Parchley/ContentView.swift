@@ -974,6 +974,7 @@ struct ContentView: View {
                             .disabled(!model.hasDocuments || model.isClearingList)
                     }
                     .help("More document actions")
+                    .accessibilityIdentifier("moreActionsMenu")
 
                     if model.selectedResult != nil || model.showInspector {
                         Button { model.showInspector.toggle() } label: {

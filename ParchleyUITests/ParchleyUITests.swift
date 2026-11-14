@@ -15,7 +15,7 @@ final class ParchleyUITests: XCTestCase {
     let add = app.buttons["Add PDFs"].firstMatch
     XCTAssertTrue(add.waitForExistence(timeout: 10))
     XCTAssertEqual(add.label, "Add PDFs")
-    XCTAssertTrue(app.buttons["More"].exists)
+    XCTAssertTrue(moreActionsMenu(in: app).waitForExistence(timeout: 5))
     XCTAssertTrue(app.staticTexts["Parchley"].exists)
   }
 
@@ -30,7 +30,7 @@ final class ParchleyUITests: XCTestCase {
     }
 
     let app = launchApp()
-    chooseFile(fixture, in: app, using: "Open")
+    chooseFile(fixture, in: app)
 
     let document = app.staticTexts["UITest Fixture"].firstMatch
     XCTAssertTrue(document.waitForExistence(timeout: 10))
@@ -46,7 +46,7 @@ final class ParchleyUITests: XCTestCase {
     export.click()
     let save = app.dialogs["Save"].firstMatch
     XCTAssertTrue(save.waitForExistence(timeout: 5))
-    goToFolder(output.deletingLastPathComponent(), in: app, dialog: save)
+    goToFolder(output.deletingLastPathComponent(), dialog: save)
     save.textFields.firstMatch.click()
     save.textFields.firstMatch.typeText(output.lastPathComponent)
     save.buttons["Save"].click()
@@ -61,28 +61,34 @@ final class ParchleyUITests: XCTestCase {
     let app = XCUIApplication()
     app.launchArguments = ["-ApplePersistenceIgnoreState", "YES"]
     app.launch()
+    app.activate()
     return app
   }
 
   @MainActor
-  private func chooseFile(_ file: URL, in app: XCUIApplication, using dialogName: String) {
+  private func chooseFile(_ file: URL, in app: XCUIApplication) {
     let add = app.buttons["Add PDFs"].firstMatch
     XCTAssertTrue(add.waitForExistence(timeout: 10))
     add.click()
 
-    let open = app.dialogs[dialogName].firstMatch
+    let open = app.sheets["Add PDFs"].firstMatch
     XCTAssertTrue(open.waitForExistence(timeout: 5))
-    goToFolder(file, in: app, dialog: open)
-    open.buttons["Open"].click()
+    goToFolder(file, dialog: open)
+    open.buttons["Add"].click()
   }
 
   @MainActor
-  private func goToFolder(_ url: URL, in app: XCUIApplication, dialog: XCUIElement) {
+  private func goToFolder(_ url: URL, dialog: XCUIElement) {
     dialog.typeKey("g", modifierFlags: [.command, .shift])
-    let goToFolder = app.sheets.firstMatch
+    let goToFolder = dialog.sheets.firstMatch
     XCTAssertTrue(goToFolder.waitForExistence(timeout: 3))
     goToFolder.textFields.firstMatch.typeText(url.path)
     goToFolder.buttons["Go"].click()
+  }
+
+  @MainActor
+  private func moreActionsMenu(in app: XCUIApplication) -> XCUIElement {
+    app.descendants(matching: .any)["moreActionsMenu"].firstMatch
   }
 
   private func makeFixturePDF() throws -> URL {
