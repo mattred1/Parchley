@@ -46,7 +46,7 @@ final class ParchleyUITests: XCTestCase {
     export.click()
     let save = app.dialogs["Save"].firstMatch
     XCTAssertTrue(save.waitForExistence(timeout: 5))
-    goToFolder(output.deletingLastPathComponent(), dialog: save)
+    goToFolder(output.deletingLastPathComponent(), in: app, dialog: save)
     save.textFields.firstMatch.click()
     save.textFields.firstMatch.typeText(output.lastPathComponent)
     save.buttons["Save"].click()
@@ -72,12 +72,12 @@ final class ParchleyUITests: XCTestCase {
 
     let open = app.dialogs[dialogName].firstMatch
     XCTAssertTrue(open.waitForExistence(timeout: 5))
-    goToFolder(file, dialog: open)
+    goToFolder(file, in: app, dialog: open)
     open.buttons["Open"].click()
   }
 
   @MainActor
-  private func goToFolder(_ url: URL, dialog: XCUIElement) {
+  private func goToFolder(_ url: URL, in app: XCUIApplication, dialog: XCUIElement) {
     dialog.typeKey("g", modifierFlags: [.command, .shift])
     let goToFolder = app.sheets.firstMatch
     XCTAssertTrue(goToFolder.waitForExistence(timeout: 3))
