@@ -29,7 +29,7 @@ final class SwiftUIAccessibilityUITests: XCTestCase {
     XCTAssertTrue(app.buttons["Add PDFs"].waitForExistence(timeout: 10))
 
     app.typeKey("o", modifierFlags: [.command])
-    let open = app.sheets["Add PDFs"].firstMatch
+    let open = app.dialogs["Open"].firstMatch
     XCTAssertTrue(open.waitForExistence(timeout: 5))
     app.typeKey(.escape, modifierFlags: [])
   }
@@ -39,7 +39,6 @@ final class SwiftUIAccessibilityUITests: XCTestCase {
     let app = XCUIApplication()
     app.launchArguments = ["-ApplePersistenceIgnoreState", "YES"]
     app.launch()
-    app.activate()
     return app
   }
 }

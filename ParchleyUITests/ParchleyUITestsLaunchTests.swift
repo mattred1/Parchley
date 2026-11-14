@@ -14,13 +14,11 @@ final class ParchleyUITestsLaunchTests: XCTestCase {
     let app = XCUIApplication()
     app.launchArguments = ["-ApplePersistenceIgnoreState", "YES"]
     app.launch()
-    app.activate()
 
     let window = app.windows.firstMatch
     XCTAssertTrue(window.waitForExistence(timeout: 10))
     XCTAssertTrue(app.buttons["Add PDFs"].waitForExistence(timeout: 10))
-    XCTAssertTrue(
-      app.descendants(matching: .any)["moreActionsMenu"].firstMatch.waitForExistence(timeout: 5))
+    XCTAssertTrue(app.buttons["More"].exists)
     XCTAssertTrue(app.staticTexts["Parchley"].exists)
     XCTAssertFalse(app.staticTexts["Unable to complete action"].exists)
 
