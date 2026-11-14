@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  macos-app:
+    name: macOS app tests
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode 26.6
+        run: sudo xcode-select --switch /Applications/Xcode_26.6.app/Contents/Developer
+
+      - name: Install pinned Rust toolchain
+        shell: bash
+        run: |
+          channel="$(sed -n 's/^channel = "\([^"]*\)"/\1/p' Rust/rust-toolchain.toml)"
+          rustup toolchain install "$channel" --profile minimal --component rustfmt --target aarch64-apple-darwin
+
+      - name: Fetch verified OCR runtimes
+        run: Scripts/fetch-ocr-assets.sh
+
+      - name: Check and test Rust engine
+        working-directory: Rust
+        run: |
+          cargo fmt --all -- --check
+          cargo test --locked
+          cargo test --locked --features parchley-core/ocr
+
+      - name: Build and test macOS app
+        run: |
+          xcodebuild test \
+            -project Parchley.xcodeproj \
+            -scheme Parchley \
+            -destination 'platform=macOS,arch=arm64' \
+            -only-testing:ParchleyTests \
+            CODE_SIGNING_ALLOWED=NO
