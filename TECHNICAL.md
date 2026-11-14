@@ -73,8 +73,8 @@ xcodebuild test \
 ```
 
 The fork's GitHub Actions workflow runs the Rust checks and macOS app tests on
-Apple silicon, and builds the marketing site on Ubuntu. It runs on pushes,
-pull requests targeting the fork's `main` branch, and manual dispatches.
+Apple silicon. It runs on pushes, pull requests targeting the fork's `main`
+branch, and manual dispatches.
 
 ## Validate a release
 

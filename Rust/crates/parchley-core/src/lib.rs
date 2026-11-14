@@ -510,8 +510,8 @@ fn run_job(r: JobRequest, inner: Arc<Inner>) {
         .pages_needing_ocr
         .iter()
         .any(|page| selected_pages.contains(page));
-    let will_run_ocr = r.ocr_mode != OcrMode::Off
-        && (r.ocr_mode == OcrMode::Force || selected_needs_ocr);
+    let will_run_ocr =
+        r.ocr_mode != OcrMode::Off && (r.ocr_mode == OcrMode::Force || selected_needs_ocr);
     {
         let mut data = lock(&inner.state);
         if is_terminal(&data.snapshot.state) || inner.cancel.is_cancelled() {
