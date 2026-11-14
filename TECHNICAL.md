@@ -72,9 +72,9 @@ xcodebuild test \
   CODE_SIGNING_ALLOWED=NO
 ```
 
-The fork's GitHub Actions workflow runs the Rust checks and macOS app tests on
-Apple silicon. It runs on pushes, pull requests targeting the fork's `main`
-branch, and manual dispatches.
+The fork's GitHub Actions workflow runs the Rust checks and macOS app unit
+tests on Apple silicon. It runs on pushes, pull requests targeting the fork's
+`main` branch, and manual dispatches.
 
 ## Validate a release
 
